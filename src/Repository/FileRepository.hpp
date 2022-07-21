@@ -33,4 +33,10 @@ struct FileRepository {
 
   [[gnu::pure]]
   const AvailableFile *FindByName(const char *name) const;
+  
+  void Sort() noexcept {
+    // Sort file list alphabetically ascending  
+    files.sort([] (const AvailableFile &a, const AvailableFile &b) {return a.name.compare(b.name) < 0;} );
+  }
+  
 };
