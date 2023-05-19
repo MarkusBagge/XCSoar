@@ -24,7 +24,8 @@
 /**
  * This modal result will trigger the "Switch InfoBox" dialog.
  */
-static constexpr int SWITCH_INFO_BOX = 100;
+static constexpr int SWITCH_INFO_BOX = 100; // Select from long list
+static constexpr int SWAP_INFO_BOX = 101;   // Swap two boxes on panel
 
 void
 dlgInfoBoxAccessShowModeless(const int id, const InfoBoxPanel *panels)
@@ -89,6 +90,8 @@ dlgInfoBoxAccessShowModeless(const int id, const InfoBoxPanel *panels)
        one that allows switching the contents */
     tab_widget.AddTab(std::make_unique<ActionWidget>(dialog.MakeModalResultCallback(SWITCH_INFO_BOX)),
                       _("Switch InfoBox"));
+    tab_widget.AddTab(std::make_unique<ActionWidget>(dialog.MakeModalResultCallback(SWAP_INFO_BOX)),
+                      _("Swap"));
   }
 
   tab_widget.AddTab(std::make_unique<ActionWidget>(dialog.MakeModalResultCallback(mrOK)),
@@ -106,4 +109,8 @@ dlgInfoBoxAccessShowModeless(const int id, const InfoBoxPanel *panels)
 
   if (result == SWITCH_INFO_BOX)
     InfoBoxManager::ShowInfoBoxPicker(id);
+
+  InfoBoxManager::SwapInfoBox(id, result == SWAP_INFO_BOX);
+  //if (result == SWAP_INFO_BOX)
+  //  InfoBoxManager::SwapInfoBox(id);
 }

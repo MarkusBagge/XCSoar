@@ -23,6 +23,8 @@ InfoBoxLayout::Layout layout;
  */
 static bool first;
 
+static int swap_box_idx = -1;
+
 static void
 DisplayInfoBox() noexcept;
 
@@ -34,12 +36,14 @@ InfoBoxDrawIfDirty() noexcept;
 static bool infoboxes_dirty = false;
 static bool infoboxes_hidden = false;
 
+
 static InfoBoxWindow *infoboxes[InfoBoxSettings::Panel::MAX_CONTENTS];
 
 // TODO locking
 void
 InfoBoxManager::Hide() noexcept
 {
+  swap_box_idx = -1; // Forget any box selection 
   if (infoboxes_hidden)
     return;
 
@@ -212,6 +216,42 @@ InfoBoxManager::ShowInfoBoxPicker(const int i) noexcept
   /* yes: apply and save it */
 
   panel.contents[i] = new_type;
+  DisplayInfoBox();
+
+  Profile::Save(Profile::map, panel, panel_index);
+}
+
+
+void
+InfoBoxManager::SwapInfoBox(const int idx, bool swap) noexcept
+{
+  if (swap) {
+    // Remember box to be swapped.
+    swap_box_idx = idx;
+    return;
+  }
+
+  if ( swap_box_idx==-1 ) {
+    // No box previously selected for swap.
+    return;
+  }
+
+  if ( swap_box_idx==idx ) {
+    // Don't swap same position. Reset selection.
+    swap_box_idx = -1;
+    return;
+  }
+
+  InfoBoxSettings &settings = CommonInterface::SetUISettings().info_boxes;
+  const unsigned panel_index = CommonInterface::GetUIState().panel_index;
+  InfoBoxSettings::Panel &panel = settings.panels[panel_index];
+
+  const InfoBoxFactory::Type currentBox = panel.contents[idx];
+  panel.contents[idx] = panel.contents[swap_box_idx];
+  panel.contents[swap_box_idx] = currentBox;
+
+  swap_box_idx = -1;
+
   DisplayInfoBox();
 
   Profile::Save(Profile::map, panel, panel_index);

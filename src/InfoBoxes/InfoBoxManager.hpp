@@ -44,4 +44,6 @@ Hide() noexcept;
 void
 ShowInfoBoxPicker(const int id = -1) noexcept;
 
+void
+SwapInfoBox(const int idx, bool swap) noexcept;
 } // namespace InfoBoxManager
