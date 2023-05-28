@@ -23,6 +23,7 @@
 
 #include <cassert>
 
+
 using namespace UI;
 
 static InfoBoxSettings::Panel clipboard;
@@ -397,6 +398,7 @@ InfoBoxesConfigWidget::SetCurrentInfoBox(unsigned _current_preview)
   RefreshEditContentDescription();
 }
 
+/*
 bool
 InfoBoxPreview::OnMouseDown([[maybe_unused]] PixelPoint p) noexcept
 {
@@ -439,6 +441,8 @@ InfoBoxPreview::OnPaint(Canvas &canvas) noexcept
   canvas.SetTextColor(is_current ? COLOR_WHITE : COLOR_BLACK);
   canvas.DrawText({2, 2}, caption);
 }
+
+*/
 
 bool
 dlgConfigInfoboxesShowModal(SingleWindow &parent,
